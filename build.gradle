@@ -1,0 +1,48 @@
+apply from: 'some.gradle'
+
+subprojects {
+    println "Subproject ${project.getProject().getName()}"
+    println "Subproject ${getVersion()}"
+    println "Subproject $version"
+    println "Subproject $group"
+    apply plugin: 'java'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    jar {
+        println "I am in parent JAR ########################"
+        manifest {
+            attributes 'Created-By': 'Mikhail.Terpugov'
+        }
+    }
+    repositories {
+        mavenCentral()
+    }
+
+}
+
+//class GreetingPlugin implements Plugin<Project> {
+//    void apply(Project project) {
+//        project.task('hello') {
+//            doLast {
+//                println 'Hello from the GreetingPlugin'
+//            }
+//        }
+//    }
+//}
+//
+//
+//
+//GreetingPlugin greetingPlugin = new GreetingPlugin()
+//greetingPlugin.apply(project);
+//apply plugin: GRADLE_PROPERTIES
+allprojects {
+    println "Hello ${project.getProject().getName()}"
+//    apply {
+////        println "I am applied clousere"
+////    }
+}
+
+
+
+

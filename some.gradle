@@ -1,0 +1,7 @@
+println "I am some gralde"
+def version1 = '1.0.0'
+println "$version1"
+setVersion(version1)
+ def some = {
+    "Hello some closure"
+}

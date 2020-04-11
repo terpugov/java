@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    println "I am in Child Jar"
+    manifest {
+        attributes 'Main-Class': 'HellOtus'
+    }
+
+    from {project.configurations.runtimeClasspath.collect {File file -> project.zipTree(file) } }
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:28.2-jre'
+}
