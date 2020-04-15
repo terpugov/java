@@ -8,7 +8,6 @@ public class HellOtus {
         for (String word : words) {
             counts.add(word);
         }
-
         System.out.println(counts.count("Karl"));
     }
 }

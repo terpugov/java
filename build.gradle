@@ -1,16 +1,18 @@
-apply from: 'some.gradle'
+apply from: 'timestamp.gradle'
 
 subprojects {
+//    println "^^^^^^^^^^^^^^^^^^^^^^^^ ${gradle.version()}"
     println "Subproject ${project.getProject().getName()}"
     println "Subproject ${getVersion()}"
     println "Subproject $version"
     println "Subproject $group"
+    println "buidlDir = $buildDir"
     apply plugin: 'java'
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_13
+    targetCompatibility = JavaVersion.VERSION_13
     jar {
-        println "I am in parent JAR ########################"
+        println "I am in parent JAR"
         manifest {
             attributes 'Created-By': 'Mikhail.Terpugov'
         }
@@ -18,29 +20,18 @@ subprojects {
     repositories {
         mavenCentral()
     }
-
 }
 
-//class GreetingPlugin implements Plugin<Project> {
-//    void apply(Project project) {
-//        project.task('hello') {
-//            doLast {
-//                println 'Hello from the GreetingPlugin'
-//            }
-//        }
-//    }
-//}
-//
-//
-//
-//GreetingPlugin greetingPlugin = new GreetingPlugin()
-//greetingPlugin.apply(project);
-//apply plugin: GRADLE_PROPERTIES
+project.gradle.taskGraph.whenReady {
+    logger.info " ${gradle.timestamp()} >>>  $project.gradle.taskGraph.allTasks "
+}
+
+gradle.taskGraph.beforeTask { Task task ->
+    logger.info  "${gradle.timestamp()} >>> executing $task ..."
+}
+
 allprojects {
-    println "Hello ${project.getProject().getName()}"
-//    apply {
-////        println "I am applied clousere"
-////    }
+    logger.info "${gradle.timestamp()} >>> Hello ${project.getProject().getName()}"
 }
 
 

@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'maven-publish'
 }
 
 
@@ -8,14 +8,53 @@ repositories {
 }
 
 jar {
-    println "I am in Child Jar"
+    println "I am in Child Jar groupId = $project.group $project.name $project.version"
     manifest {
         attributes 'Main-Class': 'HellOtus'
     }
-
     from {project.configurations.runtimeClasspath.collect {File file -> project.zipTree(file) } }
 }
 
 dependencies {
     implementation 'com.google.guava:guava:28.2-jre'
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'hw01-gradle-renamed'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'hw01-gradle'
+                description = 'Gradle home work in Otus'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'mterpugov'
+                        name = 'Mikhail Terpugov'
+                        email = 'mterpugov@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "~/.m2"
+        }
+    }
+}
+

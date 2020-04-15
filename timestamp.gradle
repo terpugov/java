@@ -1,0 +1,8 @@
+import java.text.*
+gradle.ext.timestamp = {
+    def dateFormat = new SimpleDateFormat("yyyy-MM--dd'T'HH:mm:ss'Z'")
+    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+    return dateFormat.format(new Date());
+}
+
+logger.info "${gradle.timestamp()} Declaring timestamp closure"
