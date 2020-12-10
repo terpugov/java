@@ -9,8 +9,8 @@ subprojects {
     println "buidlDir = $buildDir"
     apply plugin: 'java'
 
-    sourceCompatibility = JavaVersion.VERSION_13
-    targetCompatibility = JavaVersion.VERSION_13
+    sourceCompatibility = 13
+    targetCompatibility = 13
     jar {
         println "I am in parent JAR"
         manifest {
