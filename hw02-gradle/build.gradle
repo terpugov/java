@@ -1,4 +1,77 @@
+plugins {
+    id 'maven-publish'
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    println "I am in Child Jar groupId = $project.group $project.name $project.version"
+    manifest {
+        attributes 'Main-Class': 'HellOtus'
+    }
+    from {project.configurations.runtimeClasspath.collect {File file -> project.zipTree(file) } }
+}
 
 dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    implementation 'com.google.guava:guava:28.2-jre'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
+
+
+test {
+    useJUnitPlatform {}
+}
+
+    publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/terpugov/java")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'hw01-gradle-renamed'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'hw01-gradle'
+                description = 'Gradle home work in Otus'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'mterpugov'
+                        name = 'Mikhail Terpugov'
+                        email = 'mterpugov@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "~/.m2"
+        }
+    }
+}
+
