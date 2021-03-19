@@ -1,19 +1,28 @@
 package ru.inno.java;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.parallel.Execution;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 
 @DisplayName("List должен:")
 class DIYArrayListTest {
 
     private static int INITIAL_CAPACITY = 16;
+    static int counter = 0;
+    static int berforeAll = 0;
+    private int some = 0;
+
+    public DIYArrayListTest(int some) {
+        counter++;
+        System.out.println("конструктор");
+    }
+
 
     @BeforeAll
     public static void setUp() throws NoSuchFieldException, IllegalAccessException {
@@ -23,16 +32,29 @@ class DIYArrayListTest {
         Object value = field.get(diyArrayList);
         System.out.println(value);
         INITIAL_CAPACITY = (int) value;
+        berforeAll++;
+    }
+
+    @BeforeEach
+    public void beforeEach(){
+        System.out.println("beforeEach");
+    }
+
+    @AfterEach
+    public void afterEcach(){
+        System.out.println("afterEach");
     }
 
     @DisplayName("поддерживать Collections.addAll()")
     @Test
-    public void collectionsAddAll() {
+    public void collectionsAddAll() throws Exception {
         DIYArrayList<Integer> diyArrayList = new DIYArrayList<>();
         Collections.addAll(diyArrayList, 0, 1, 2, 3, 4, 5);
+
         for (int i = 0; i < diyArrayList.size(); i++) {
             assertEquals(i, diyArrayList.get(i));
         }
+        throw new Exception("тест не прошел");
     }
 
     @DisplayName("поддерживать Collections.sort()")
@@ -181,6 +203,7 @@ class DIYArrayListTest {
         ListIterator<Integer> listIterator = list.listIterator();
         listIterator.next();
         listIterator.add(1);
+        System.out.println("INIT" + INITIAL_CAPACITY);
         assertEquals(17, list.size());
     }
 
@@ -221,6 +244,11 @@ class DIYArrayListTest {
                 diyArrayList.iterator().next());
         assertThrows(UnsupportedOperationException.class, () ->
                 diyArrayList.iterator().hasNext());
+    }
 
+    @AfterAll
+    public static void test() {
+        System.out.println(berforeAll);
+        System.out.println(counter);
     }
 }
